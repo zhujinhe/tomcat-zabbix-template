@@ -1,10 +1,10 @@
 About:
 
-You can monitting your tomcat with custom settings by using the template below. 
+You can moittoring your tomcat with custom settings by using the template below. 
 
+Which template to be used depends on the ObjectName of your Mbean. You can get Mbean data through jconcole of JDK or cmdline-jmxclient-0.10.3.jar(not recommend) after setting on the zabbix-agent has done.
 ObjectName:Catalina:type=ThreadPool,name=ajp-bio-8080 (non-double-quotations) matches zbx_JMX-tomcat-old-version-with-macros_template.xml 
 ObjectName:Catalina:type=ThreadPool,name="ajp-bio-8080"(double-quotations) matches zbx_JMX-tomcat-with-macros_template.xml
-Which template to be used depends on the ObjectName of your Mbean. You can get Mbean data through jconcole of JDK or cmdline-jmxclient-0.10.3.jar(not recommend) after setting on the zabbix-agent has done.
 
 There are 7 macros defiended on the templates. You can add Macros on the hosts(High priority than the templates) to overwrite it.
 
@@ -48,7 +48,7 @@ Allow access to port 10050,12345,12346 if the firewall is started.
 Setting on the zabbix-server.
 
 step 1 : Import the right Template to your zabbix-server web interface. 
-step 2 : Add JMX interface:$IP:10050
+step 2 : Add JMX interface:$IP:12345
 step 3 : Link the template to the host.
 setp 4 : Add Macros on the host if your setting of tomcat does not matched the default Macros on the templates.
 
