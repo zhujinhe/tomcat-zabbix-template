@@ -1,12 +1,12 @@
 About:
 
-You can moittoring your tomcat with custom settings by using the template below. 
+You can monitor your tomcat with custom settings by using the template below. 
 
-Which template to be used depends on the ObjectName of your Mbean. You can get Mbean data through jconcole of JDK or cmdline-jmxclient-0.10.3.jar(not recommend) after setting on the zabbix-agent has done.
+Which template to be used depends on the ObjectName of your Mbean. You can get Mbean data through jconsole of JDK or cmdline-jmxclient-0.10.3.jar(not recommended) after setting up the zabbix-agent has finished.
 ObjectName:Catalina:type=ThreadPool,name=ajp-bio-8080 (non-double-quotations) matches zbx_JMX-tomcat-old-version-with-macros_template.xml 
 ObjectName:Catalina:type=ThreadPool,name="ajp-bio-8080"(double-quotations) matches zbx_JMX-tomcat-with-macros_template.xml
 
-There are 7 macros defiended on the templates. You can add Macros on the hosts(High priority than the templates) to overwrite it.
+There are 7 macros defined on the templates. You can add Macros on the hosts(higher priority than the templates) to overwrite it.
 
 {$AJP_CONNECTOR_DESC}:jk(default on tomcat 6?not formirmed)|ajp-bio(default on tomcat 7)|ajp-nio(default on tomcat 8)
 #{$AJP_CONNECTOR_PORT}:8009 (default)
@@ -21,36 +21,36 @@ Requirement:
 1. Check the Tomcat version:
 sh /path/to/your/tomcat/bin/catalina.sh version
 2. Get $URL of catalina-jmx-remote.jar that matches tomcat version via http://mvnrepository.com/artifact/org.apache.tomcat/tomcat-catalina-jmx-remote
-3. Confirm the $IP address of your hosts.(eg:172.27.4.105)
+3. Confirm the IP address of your hosts.(eg:172.27.4.105)
 4. Confirm the ProtocolHander of connector (bio|nio|apr)
 
-Getting start:
-Setting on the zabbix-agent.
+Getting started:
+Setting up the zabbix-agent.
 
 step 1: vim /path/to/your/tomcat/bin/catalina.sh
-Replease 172.27.4.105 by your $IP and insert the these lines ahead of the first non-comment line of the catalina.sh.
+Replace 172.27.4.105 by your IP and insert these lines before the first non-commented lines of the catalina.sh.
 CATALINA_OPTS="-Dcom.sun.management.jmxremote \
                -Dcom.sun.management.jmxremote.authenticate=false \
                -Dcom.sun.management.jmxremote.ssl=false \
                -Djava.rmi.server.hostname=172.27.4.105"
 
 step 2:vim /path/to/your/tomcat/conf/server.xml
-Add this line next the the last line of <Listener className=""/>
+Add this line next to the last line of <Listener className=""/>
 <Listener className="org.apache.catalina.mbeans.JmxRemoteLifecycleListener" rmiServerPortPlatform="12346" rmiRegistryPortPlatform="12345"/>
 
 step 3 :
-Download the maches catalina-jmx-remote.jar $URL to your /path/to/your/tomcat/lib/
+Download the matching catalina-jmx-remote.jar $URL for your /path/to/your/tomcat/lib/
 wget $URL -O /path/to/your/tomcat/lib/catalina-jmx-remote.jar
 
 step 4 :
 Allow access to port 10050,12345,12346 if the firewall is started.
 
-Setting on the zabbix-server.
+Setting up the zabbix-server.
 
-step 1 : Import the right Template to your zabbix-server web interface. 
+step 1 : Import the right Template for your zabbix-server web interface. 
 step 2 : Add JMX interface:$IP:12345
 step 3 : Link the template to the host.
-setp 4 : Add Macros on the host if your setting of tomcat does not matched the default Macros on the templates.
+setp 4 : Add Macros on the host if your setting of tomcat does not match the default Macros on the templates.
 
 Reference Documents:
 https://www.zabbix.com/documentation/2.4/manual/config/items/itemtypes/jmx_monitoring
